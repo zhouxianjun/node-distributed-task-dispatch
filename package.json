@@ -16,14 +16,14 @@
   "author": "Alone (Gary)",
   "license": "ISC",
   "dependencies": {
-    "co": "^4.6.0",
-    "koa": "^2.0.1",
+    "koa": "^2.2.0",
     "koa-bodyparser": "^4.1.0",
     "koa-router": "^7.0.1",
     "merge": "^1.2.0",
     "mysql": "^2.13.0",
     "sequelize": "^3.30.2",
     "tracer": "^0.8.7",
+    "tracer-logger": "^1.0.1",
     "underscore": "^1.8.3",
     "walk": "^2.3.9",
     "watch": "^1.0.2"
