@@ -1,4 +1,14 @@
 {
   "base_path": "",
-  "web_port": 9080
+  "web_port": 9080,
+  "db": {
+    "database": "dts",
+    "user": "root",
+    "password": "abcd1234",
+    "option": {
+      "dialect": "mysql",
+      "host": "192.168.1.114",
+      "port": 3306
+    }
+  }
 }

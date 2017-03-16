@@ -27,5 +27,3 @@
 'use strict';
 const config = require('./config.json');
 const Init = require('./lib/Init');
-// 启动WEB
-Init.app.listen(config.web_port, '0.0.0.0');
