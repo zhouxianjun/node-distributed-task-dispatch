@@ -14,7 +14,6 @@ struct JobStruct {
     13: optional i32 repeatInterval,
     14: optional bool relyOnPrevCycle
 }
-}
 exception InvalidOperation {
     1: i32 code,
     2: string msg

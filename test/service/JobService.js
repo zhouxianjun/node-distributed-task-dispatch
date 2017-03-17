@@ -1,8 +1,8 @@
 /**
  * Created with JetBrains Idea.
  * User: Along(Gary)
- * Date: 3/16/17
- * Time: 7:52 PM
+ * Date: 3/17/17
+ * Time: 9:38 PM
  *                 _ooOoo_
  *                o8888888o
  *                88" . "88
@@ -25,10 +25,13 @@
  *           佛祖保佑       永无BUG
  */
 'use strict';
-const config = require('../config.json');
-const zookeeper = require('node-zookeeper-client');
 const trc = require('trc');
-const ServerRegister = trc.ServerRegister;
-exports.zkClient = zookeeper.createClient(config.zookeeper);
-exports.zkClient.connect();
-exports.server = new ServerRegister(exports.zkClient);
+module.exports = class JobService extends trc.ReferenceBean {
+    get type() {
+        return require('../../gen-nodejs/JobService');
+    }
+    get service() {
+        return 'JobService';
+    }
+    add(job){}
+};

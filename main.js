@@ -29,8 +29,8 @@ const config = require('./config.json');
 const Utils = require('./lib/Utils');
 // 初始化数据库
 const DB = require('./lib/DB');
-Utils.loadEntity(DB, './lib/entity');
+Utils.loadEntity(DB.sequelize, './lib/entity');
 
 // 初始化RPC
-const trc = require('trc');
-const ServerRegister = trc.ServerRegister;
+const RPC = require('./lib/RPC');
+RPC.server.load('./lib/service');

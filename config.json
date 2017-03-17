@@ -4,11 +4,12 @@
   "db": {
     "database": "dts",
     "user": "root",
-    "password": "abcd1234",
+    "password": "woaini",
     "option": {
       "dialect": "mysql",
-      "host": "192.168.1.114",
+      "host": "127.0.0.1",
       "port": 3306
     }
-  }
+  },
+  "zookeeper": "127.0.0.1:2181"
 }
