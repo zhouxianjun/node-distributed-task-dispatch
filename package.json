@@ -21,14 +21,15 @@
     "koa-router": "^7.0.1",
     "merge": "^1.2.0",
     "mysql": "^2.13.0",
+    "node-schedule": "^1.2.1",
     "node-zookeeper-client": "^0.2.2",
     "sequelize": "^3.30.2",
+    "thrift": "latest",
     "tracer": "^0.8.7",
     "tracer-logger": "^1.0.1",
     "trc": "^1.0.0",
     "underscore": "^1.8.3",
     "walk": "^2.3.9",
-    "watch": "^1.0.2",
-    "thrift": "latest"
+    "watch": "^1.0.2"
   }
 }
