@@ -34,4 +34,4 @@ Utils.loadEntity(DB.sequelize, './lib/entity');
 // 初始化RPC
 const RPC = require('./lib/RPC');
 RPC.server.load('./lib/service');
-RPC.client.load('./lib/client');
+// RPC.client.load('./lib/client');

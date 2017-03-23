@@ -16,6 +16,8 @@
   "author": "Alone (Gary)",
   "license": "ISC",
   "dependencies": {
+    "cron-parser": "latest",
+    "json-path": "^0.1.3",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.1.0",
     "koa-router": "^7.0.1",
