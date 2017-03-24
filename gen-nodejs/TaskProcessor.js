@@ -18,12 +18,20 @@ var ttypes = require('./TaskProcessor_types');
 var TaskProcessor_execute_args = function(args) {
   this.job = null;
   this.body = null;
+  this.protoName = null;
+  this.action = null;
   if (args) {
     if (args.job !== undefined && args.job !== null) {
       this.job = new PublicStruct_ttypes.JobStruct(args.job);
     }
     if (args.body !== undefined && args.body !== null) {
       this.body = args.body;
+    }
+    if (args.protoName !== undefined && args.protoName !== null) {
+      this.protoName = args.protoName;
+    }
+    if (args.action !== undefined && args.action !== null) {
+      this.action = args.action;
     }
   }
 };
@@ -56,6 +64,20 @@ TaskProcessor_execute_args.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 3:
+      if (ftype == Thrift.Type.STRING) {
+        this.protoName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 4:
+      if (ftype == Thrift.Type.STRING) {
+        this.action = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -77,18 +99,32 @@ TaskProcessor_execute_args.prototype.write = function(output) {
     output.writeString(this.body);
     output.writeFieldEnd();
   }
+  if (this.protoName !== null && this.protoName !== undefined) {
+    output.writeFieldBegin('protoName', Thrift.Type.STRING, 3);
+    output.writeString(this.protoName);
+    output.writeFieldEnd();
+  }
+  if (this.action !== null && this.action !== undefined) {
+    output.writeFieldBegin('action', Thrift.Type.STRING, 4);
+    output.writeString(this.action);
+    output.writeFieldEnd();
+  }
   output.writeFieldStop();
   output.writeStructEnd();
   return;
 };
 
 var TaskProcessor_execute_result = function(args) {
+  this.success = null;
   this.ex = null;
   if (args instanceof PublicStruct_ttypes.InvalidOperation) {
     this.ex = args;
     return;
   }
   if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = new PublicStruct_ttypes.HostInfo(args.success);
+    }
     if (args.ex !== undefined && args.ex !== null) {
       this.ex = args.ex;
     }
@@ -108,6 +144,14 @@ TaskProcessor_execute_result.prototype.read = function(input) {
     }
     switch (fid)
     {
+      case 0:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.success = new PublicStruct_ttypes.HostInfo();
+        this.success.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
       case 1:
       if (ftype == Thrift.Type.STRUCT) {
         this.ex = new PublicStruct_ttypes.InvalidOperation();
@@ -116,9 +160,6 @@ TaskProcessor_execute_result.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
-      case 0:
-        input.skip(ftype);
-        break;
       default:
         input.skip(ftype);
     }
@@ -130,6 +171,11 @@ TaskProcessor_execute_result.prototype.read = function(input) {
 
 TaskProcessor_execute_result.prototype.write = function(output) {
   output.writeStructBegin('TaskProcessor_execute_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
+    this.success.write(output);
+    output.writeFieldEnd();
+  }
   if (this.ex !== null && this.ex !== undefined) {
     output.writeFieldBegin('ex', Thrift.Type.STRUCT, 1);
     this.ex.write(output);
@@ -149,7 +195,7 @@ var TaskProcessorClient = exports.Client = function(output, pClass) {
 TaskProcessorClient.prototype = {};
 TaskProcessorClient.prototype.seqid = function() { return this._seqid; };
 TaskProcessorClient.prototype.new_seqid = function() { return this._seqid += 1; };
-TaskProcessorClient.prototype.execute = function(job, body, callback) {
+TaskProcessorClient.prototype.execute = function(job, body, protoName, action, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -160,20 +206,22 @@ TaskProcessorClient.prototype.execute = function(job, body, callback) {
         _defer.resolve(result);
       }
     };
-    this.send_execute(job, body);
+    this.send_execute(job, body, protoName, action);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_execute(job, body);
+    this.send_execute(job, body, protoName, action);
   }
 };
 
-TaskProcessorClient.prototype.send_execute = function(job, body) {
+TaskProcessorClient.prototype.send_execute = function(job, body, protoName, action) {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('execute', Thrift.MessageType.CALL, this.seqid());
   var args = new TaskProcessor_execute_args();
   args.job = job;
   args.body = body;
+  args.protoName = protoName;
+  args.action = action;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
@@ -195,7 +243,10 @@ TaskProcessorClient.prototype.recv_execute = function(input,mtype,rseqid) {
   if (null !== result.ex) {
     return callback(result.ex);
   }
-  callback(null);
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('execute failed: unknown result');
 };
 var TaskProcessorProcessor = exports.Processor = function(handler) {
   this._handler = handler;
@@ -220,8 +271,8 @@ TaskProcessorProcessor.prototype.process_execute = function(seqid, input, output
   var args = new TaskProcessor_execute_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.execute.length === 2) {
-    Q.fcall(this._handler.execute, args.job, args.body)
+  if (this._handler.execute.length === 4) {
+    Q.fcall(this._handler.execute, args.job, args.body, args.protoName, args.action)
       .then(function(result) {
         var result_obj = new TaskProcessor_execute_result({success: result});
         output.writeMessageBegin("execute", Thrift.MessageType.REPLY, seqid);
@@ -242,7 +293,7 @@ TaskProcessorProcessor.prototype.process_execute = function(seqid, input, output
         output.flush();
       });
   } else {
-    this._handler.execute(args.job, args.body, function (err, result) {
+    this._handler.execute(args.job, args.body, args.protoName, args.action, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof PublicStruct_ttypes.InvalidOperation) {
         result_obj = new TaskProcessor_execute_result((err !== null || typeof err === 'undefined') ? err : {success: result});

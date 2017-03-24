@@ -11,32 +11,33 @@ var Q = thrift.Q;
 
 
 var ttypes = module.exports = {};
-ttypes.JobType = {
-  'CRON' : 0,
-  'REAL_TIME' : 1,
-  'TIMER' : 2,
-  'REPEAT' : 3
-};
 var JobStruct = module.exports.JobStruct = function(args) {
   this.taskId = null;
   this.type = null;
   this.maxRetryTimes = null;
   this.retryTimes = null;
   this.nodeGroup = null;
-  this.share = null;
+  this.action = null;
   this.params = null;
+  this.protoName = null;
   this.feedback = null;
   this.cron = null;
   this.triggerTime = null;
   this.repeatCount = null;
   this.repeatInterval = null;
   this.relyOnPrevCycle = null;
+  this.submitHost = null;
+  this.submitPid = null;
   if (args) {
     if (args.taskId !== undefined && args.taskId !== null) {
       this.taskId = args.taskId;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field taskId is unset!');
     }
     if (args.type !== undefined && args.type !== null) {
       this.type = args.type;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field type is unset!');
     }
     if (args.maxRetryTimes !== undefined && args.maxRetryTimes !== null) {
       this.maxRetryTimes = args.maxRetryTimes;
@@ -46,12 +47,19 @@ var JobStruct = module.exports.JobStruct = function(args) {
     }
     if (args.nodeGroup !== undefined && args.nodeGroup !== null) {
       this.nodeGroup = args.nodeGroup;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field nodeGroup is unset!');
     }
-    if (args.share !== undefined && args.share !== null) {
-      this.share = args.share;
+    if (args.action !== undefined && args.action !== null) {
+      this.action = args.action;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field action is unset!');
     }
     if (args.params !== undefined && args.params !== null) {
-      this.params = Thrift.copyMap(args.params, [null]);
+      this.params = args.params;
+    }
+    if (args.protoName !== undefined && args.protoName !== null) {
+      this.protoName = args.protoName;
     }
     if (args.feedback !== undefined && args.feedback !== null) {
       this.feedback = args.feedback;
@@ -70,6 +78,16 @@ var JobStruct = module.exports.JobStruct = function(args) {
     }
     if (args.relyOnPrevCycle !== undefined && args.relyOnPrevCycle !== null) {
       this.relyOnPrevCycle = args.relyOnPrevCycle;
+    }
+    if (args.submitHost !== undefined && args.submitHost !== null) {
+      this.submitHost = args.submitHost;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field submitHost is unset!');
+    }
+    if (args.submitPid !== undefined && args.submitPid !== null) {
+      this.submitPid = args.submitPid;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field submitPid is unset!');
     }
   }
 };
@@ -95,8 +113,8 @@ JobStruct.prototype.read = function(input) {
       }
       break;
       case 2:
-      if (ftype == Thrift.Type.I32) {
-        this.type = input.readI32();
+      if (ftype == Thrift.Type.STRING) {
+        this.type = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -123,74 +141,78 @@ JobStruct.prototype.read = function(input) {
       }
       break;
       case 7:
-      if (ftype == Thrift.Type.BOOL) {
-        this.share = input.readBool();
+      if (ftype == Thrift.Type.STRING) {
+        this.action = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
       case 8:
-      if (ftype == Thrift.Type.MAP) {
-        var _size0 = 0;
-        var _rtmp34;
-        this.params = {};
-        var _ktype1 = 0;
-        var _vtype2 = 0;
-        _rtmp34 = input.readMapBegin();
-        _ktype1 = _rtmp34.ktype;
-        _vtype2 = _rtmp34.vtype;
-        _size0 = _rtmp34.size;
-        for (var _i5 = 0; _i5 < _size0; ++_i5)
-        {
-          var key6 = null;
-          var val7 = null;
-          key6 = input.readString();
-          val7 = input.readString();
-          this.params[key6] = val7;
-        }
-        input.readMapEnd();
+      if (ftype == Thrift.Type.STRING) {
+        this.params = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
       case 9:
+      if (ftype == Thrift.Type.STRING) {
+        this.protoName = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 10:
       if (ftype == Thrift.Type.BOOL) {
         this.feedback = input.readBool();
       } else {
         input.skip(ftype);
       }
       break;
-      case 10:
+      case 11:
       if (ftype == Thrift.Type.STRING) {
         this.cron = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 11:
+      case 12:
       if (ftype == Thrift.Type.I64) {
         this.triggerTime = input.readI64();
       } else {
         input.skip(ftype);
       }
       break;
-      case 12:
+      case 13:
       if (ftype == Thrift.Type.I32) {
         this.repeatCount = input.readI32();
       } else {
         input.skip(ftype);
       }
       break;
-      case 13:
+      case 14:
       if (ftype == Thrift.Type.I32) {
         this.repeatInterval = input.readI32();
       } else {
         input.skip(ftype);
       }
       break;
-      case 14:
+      case 15:
       if (ftype == Thrift.Type.BOOL) {
         this.relyOnPrevCycle = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 16:
+      if (ftype == Thrift.Type.STRING) {
+        this.submitHost = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 17:
+      if (ftype == Thrift.Type.I32) {
+        this.submitPid = input.readI32();
       } else {
         input.skip(ftype);
       }
@@ -212,8 +234,8 @@ JobStruct.prototype.write = function(output) {
     output.writeFieldEnd();
   }
   if (this.type !== null && this.type !== undefined) {
-    output.writeFieldBegin('type', Thrift.Type.I32, 2);
-    output.writeI32(this.type);
+    output.writeFieldBegin('type', Thrift.Type.STRING, 2);
+    output.writeString(this.type);
     output.writeFieldEnd();
   }
   if (this.maxRetryTimes !== null && this.maxRetryTimes !== undefined) {
@@ -231,54 +253,59 @@ JobStruct.prototype.write = function(output) {
     output.writeString(this.nodeGroup);
     output.writeFieldEnd();
   }
-  if (this.share !== null && this.share !== undefined) {
-    output.writeFieldBegin('share', Thrift.Type.BOOL, 7);
-    output.writeBool(this.share);
+  if (this.action !== null && this.action !== undefined) {
+    output.writeFieldBegin('action', Thrift.Type.STRING, 7);
+    output.writeString(this.action);
     output.writeFieldEnd();
   }
   if (this.params !== null && this.params !== undefined) {
-    output.writeFieldBegin('params', Thrift.Type.MAP, 8);
-    output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.params));
-    for (var kiter8 in this.params)
-    {
-      if (this.params.hasOwnProperty(kiter8))
-      {
-        var viter9 = this.params[kiter8];
-        output.writeString(kiter8);
-        output.writeString(viter9);
-      }
-    }
-    output.writeMapEnd();
+    output.writeFieldBegin('params', Thrift.Type.STRING, 8);
+    output.writeString(this.params);
+    output.writeFieldEnd();
+  }
+  if (this.protoName !== null && this.protoName !== undefined) {
+    output.writeFieldBegin('protoName', Thrift.Type.STRING, 9);
+    output.writeString(this.protoName);
     output.writeFieldEnd();
   }
   if (this.feedback !== null && this.feedback !== undefined) {
-    output.writeFieldBegin('feedback', Thrift.Type.BOOL, 9);
+    output.writeFieldBegin('feedback', Thrift.Type.BOOL, 10);
     output.writeBool(this.feedback);
     output.writeFieldEnd();
   }
   if (this.cron !== null && this.cron !== undefined) {
-    output.writeFieldBegin('cron', Thrift.Type.STRING, 10);
+    output.writeFieldBegin('cron', Thrift.Type.STRING, 11);
     output.writeString(this.cron);
     output.writeFieldEnd();
   }
   if (this.triggerTime !== null && this.triggerTime !== undefined) {
-    output.writeFieldBegin('triggerTime', Thrift.Type.I64, 11);
+    output.writeFieldBegin('triggerTime', Thrift.Type.I64, 12);
     output.writeI64(this.triggerTime);
     output.writeFieldEnd();
   }
   if (this.repeatCount !== null && this.repeatCount !== undefined) {
-    output.writeFieldBegin('repeatCount', Thrift.Type.I32, 12);
+    output.writeFieldBegin('repeatCount', Thrift.Type.I32, 13);
     output.writeI32(this.repeatCount);
     output.writeFieldEnd();
   }
   if (this.repeatInterval !== null && this.repeatInterval !== undefined) {
-    output.writeFieldBegin('repeatInterval', Thrift.Type.I32, 13);
+    output.writeFieldBegin('repeatInterval', Thrift.Type.I32, 14);
     output.writeI32(this.repeatInterval);
     output.writeFieldEnd();
   }
   if (this.relyOnPrevCycle !== null && this.relyOnPrevCycle !== undefined) {
-    output.writeFieldBegin('relyOnPrevCycle', Thrift.Type.BOOL, 14);
+    output.writeFieldBegin('relyOnPrevCycle', Thrift.Type.BOOL, 15);
     output.writeBool(this.relyOnPrevCycle);
+    output.writeFieldEnd();
+  }
+  if (this.submitHost !== null && this.submitHost !== undefined) {
+    output.writeFieldBegin('submitHost', Thrift.Type.STRING, 16);
+    output.writeString(this.submitHost);
+    output.writeFieldEnd();
+  }
+  if (this.submitPid !== null && this.submitPid !== undefined) {
+    output.writeFieldBegin('submitPid', Thrift.Type.I32, 17);
+    output.writeI32(this.submitPid);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -355,3 +382,95 @@ InvalidOperation.prototype.write = function(output) {
   return;
 };
 
+var HostInfo = module.exports.HostInfo = function(args) {
+  this.host = null;
+  this.port = null;
+  this.pid = null;
+  if (args) {
+    if (args.host !== undefined && args.host !== null) {
+      this.host = args.host;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field host is unset!');
+    }
+    if (args.port !== undefined && args.port !== null) {
+      this.port = args.port;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field port is unset!');
+    }
+    if (args.pid !== undefined && args.pid !== null) {
+      this.pid = args.pid;
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field pid is unset!');
+    }
+  }
+};
+HostInfo.prototype = {};
+HostInfo.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.host = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.I32) {
+        this.port = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.I32) {
+        this.pid = input.readI32();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+HostInfo.prototype.write = function(output) {
+  output.writeStructBegin('HostInfo');
+  if (this.host !== null && this.host !== undefined) {
+    output.writeFieldBegin('host', Thrift.Type.STRING, 1);
+    output.writeString(this.host);
+    output.writeFieldEnd();
+  }
+  if (this.port !== null && this.port !== undefined) {
+    output.writeFieldBegin('port', Thrift.Type.I32, 2);
+    output.writeI32(this.port);
+    output.writeFieldEnd();
+  }
+  if (this.pid !== null && this.pid !== undefined) {
+    output.writeFieldBegin('pid', Thrift.Type.I32, 3);
+    output.writeI32(this.pid);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+ttypes.CRON = 'CRON';
+ttypes.REAL_TIME = 'REAL_TIME';
+ttypes.TIMER = 'TIMER';
+ttypes.REPEAT = 'REPEAT';

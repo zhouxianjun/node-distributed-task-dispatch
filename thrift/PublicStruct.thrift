@@ -1,27 +1,34 @@
 namespace java com.alone.dts.thrift.struct
 struct JobStruct {
-    1: string taskId,
-    2: JobType type,
+    1: required string taskId,
+    2: required string type,
     3: optional i32 maxRetryTimes,
     5: optional i32 retryTimes,
-    6: string nodeGroup,
-    7: optional bool share,
-    8: optional map<string, string> params,
-    9: optional bool feedback,
-    10: optional string cron,
-    11: optional i64 triggerTime,
-    12: optional i32 repeatCount,
-    13: optional i32 repeatInterval,
-    14: optional bool relyOnPrevCycle
+    6: required string nodeGroup,
+    7: required string action,
+    8: optional string params,
+    9: optional string protoName,
+    10: optional bool feedback,
+    11: optional string cron,
+    12: optional i64 triggerTime,
+    13: optional i32 repeatCount,
+    14: optional i32 repeatInterval,
+    15: optional bool relyOnPrevCycle,
+    16: required string submitHost,
+    17: required i32 submitPid
 }
 exception InvalidOperation {
     1: i32 code,
     2: string msg
 }
 
-enum JobType {
-    CRON,
-    REAL_TIME,
-    TIMER,
-    REPEAT
+struct HostInfo {
+    1: required string host,
+    2: required i32 port,
+    3: required i32 pid
 }
+
+const string CRON = 'CRON';
+const string REAL_TIME = 'REAL_TIME';
+const string TIMER = 'TIMER';
+const string REPEAT = 'REPEAT';
