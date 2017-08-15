@@ -12,5 +12,8 @@
       "timezone": "+08:00"
     }
   },
-  "zookeeper": "127.0.0.1:2181"
+  "zookeeper": "127.0.0.1:2181",
+  "scan_interval": 1200,
+  "distributeRetry": 3,
+  "distributeInterval": 10000
 }

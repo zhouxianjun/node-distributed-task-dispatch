@@ -12,10 +12,10 @@ var Q = thrift.Q;
 var PublicStruct_ttypes = require('./PublicStruct_types');
 
 
-var ttypes = require('./TaskProcessor_types');
+var ttypes = require('./JobService_types');
 //HELPER FUNCTIONS AND STRUCTURES
 
-var TaskProcessor_execute_args = function(args) {
+var JobService_add_args = function(args) {
   this.job = null;
   if (args) {
     if (args.job !== undefined && args.job !== null) {
@@ -23,8 +23,8 @@ var TaskProcessor_execute_args = function(args) {
     }
   }
 };
-TaskProcessor_execute_args.prototype = {};
-TaskProcessor_execute_args.prototype.read = function(input) {
+JobService_add_args.prototype = {};
+JobService_add_args.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -57,8 +57,8 @@ TaskProcessor_execute_args.prototype.read = function(input) {
   return;
 };
 
-TaskProcessor_execute_args.prototype.write = function(output) {
-  output.writeStructBegin('TaskProcessor_execute_args');
+JobService_add_args.prototype.write = function(output) {
+  output.writeStructBegin('JobService_add_args');
   if (this.job !== null && this.job !== undefined) {
     output.writeFieldBegin('job', Thrift.Type.STRUCT, 1);
     this.job.write(output);
@@ -69,24 +69,20 @@ TaskProcessor_execute_args.prototype.write = function(output) {
   return;
 };
 
-var TaskProcessor_execute_result = function(args) {
-  this.success = null;
+var JobService_add_result = function(args) {
   this.ex = null;
   if (args instanceof PublicStruct_ttypes.InvalidOperation) {
     this.ex = args;
     return;
   }
   if (args) {
-    if (args.success !== undefined && args.success !== null) {
-      this.success = new PublicStruct_ttypes.HostInfo(args.success);
-    }
     if (args.ex !== undefined && args.ex !== null) {
       this.ex = args.ex;
     }
   }
 };
-TaskProcessor_execute_result.prototype = {};
-TaskProcessor_execute_result.prototype.read = function(input) {
+JobService_add_result.prototype = {};
+JobService_add_result.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -99,14 +95,6 @@ TaskProcessor_execute_result.prototype.read = function(input) {
     }
     switch (fid)
     {
-      case 0:
-      if (ftype == Thrift.Type.STRUCT) {
-        this.success = new PublicStruct_ttypes.HostInfo();
-        this.success.read(input);
-      } else {
-        input.skip(ftype);
-      }
-      break;
       case 1:
       if (ftype == Thrift.Type.STRUCT) {
         this.ex = new PublicStruct_ttypes.InvalidOperation();
@@ -115,6 +103,9 @@ TaskProcessor_execute_result.prototype.read = function(input) {
         input.skip(ftype);
       }
       break;
+      case 0:
+        input.skip(ftype);
+        break;
       default:
         input.skip(ftype);
     }
@@ -124,13 +115,8 @@ TaskProcessor_execute_result.prototype.read = function(input) {
   return;
 };
 
-TaskProcessor_execute_result.prototype.write = function(output) {
-  output.writeStructBegin('TaskProcessor_execute_result');
-  if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.STRUCT, 0);
-    this.success.write(output);
-    output.writeFieldEnd();
-  }
+JobService_add_result.prototype.write = function(output) {
+  output.writeStructBegin('JobService_add_result');
   if (this.ex !== null && this.ex !== undefined) {
     output.writeFieldBegin('ex', Thrift.Type.STRUCT, 1);
     this.ex.write(output);
@@ -141,16 +127,16 @@ TaskProcessor_execute_result.prototype.write = function(output) {
   return;
 };
 
-var TaskProcessorClient = exports.Client = function(output, pClass) {
+var JobServiceClient = exports.Client = function(output, pClass) {
     this.output = output;
     this.pClass = pClass;
     this._seqid = 0;
     this._reqs = {};
 };
-TaskProcessorClient.prototype = {};
-TaskProcessorClient.prototype.seqid = function() { return this._seqid; };
-TaskProcessorClient.prototype.new_seqid = function() { return this._seqid += 1; };
-TaskProcessorClient.prototype.execute = function(job, callback) {
+JobServiceClient.prototype = {};
+JobServiceClient.prototype.seqid = function() { return this._seqid; };
+JobServiceClient.prototype.new_seqid = function() { return this._seqid += 1; };
+JobServiceClient.prototype.add = function(job, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
     var _defer = Q.defer();
@@ -161,25 +147,25 @@ TaskProcessorClient.prototype.execute = function(job, callback) {
         _defer.resolve(result);
       }
     };
-    this.send_execute(job);
+    this.send_add(job);
     return _defer.promise;
   } else {
     this._reqs[this.seqid()] = callback;
-    this.send_execute(job);
+    this.send_add(job);
   }
 };
 
-TaskProcessorClient.prototype.send_execute = function(job) {
+JobServiceClient.prototype.send_add = function(job) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('execute', Thrift.MessageType.CALL, this.seqid());
-  var args = new TaskProcessor_execute_args();
+  output.writeMessageBegin('add', Thrift.MessageType.CALL, this.seqid());
+  var args = new JobService_add_args();
   args.job = job;
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
 };
 
-TaskProcessorClient.prototype.recv_execute = function(input,mtype,rseqid) {
+JobServiceClient.prototype.recv_add = function(input,mtype,rseqid) {
   var callback = this._reqs[rseqid] || function() {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -188,23 +174,20 @@ TaskProcessorClient.prototype.recv_execute = function(input,mtype,rseqid) {
     input.readMessageEnd();
     return callback(x);
   }
-  var result = new TaskProcessor_execute_result();
+  var result = new JobService_add_result();
   result.read(input);
   input.readMessageEnd();
 
   if (null !== result.ex) {
     return callback(result.ex);
   }
-  if (null !== result.success) {
-    return callback(null, result.success);
-  }
-  return callback('execute failed: unknown result');
+  callback(null);
 };
-var TaskProcessorProcessor = exports.Processor = function(handler) {
+var JobServiceProcessor = exports.Processor = function(handler) {
   this._handler = handler;
 }
 ;
-TaskProcessorProcessor.prototype.process = function(input, output) {
+JobServiceProcessor.prototype.process = function(input, output) {
   var r = input.readMessageBegin();
   if (this['process_' + r.fname]) {
     return this['process_' + r.fname].call(this, r.rseqid, input, output);
@@ -219,40 +202,40 @@ TaskProcessorProcessor.prototype.process = function(input, output) {
   }
 }
 ;
-TaskProcessorProcessor.prototype.process_execute = function(seqid, input, output) {
-  var args = new TaskProcessor_execute_args();
+JobServiceProcessor.prototype.process_add = function(seqid, input, output) {
+  var args = new JobService_add_args();
   args.read(input);
   input.readMessageEnd();
-  if (this._handler.execute.length === 1) {
-    Q.fcall(this._handler.execute, args.job)
+  if (this._handler.add.length === 1) {
+    Q.fcall(this._handler.add, args.job)
       .then(function(result) {
-        var result_obj = new TaskProcessor_execute_result({success: result});
-        output.writeMessageBegin("execute", Thrift.MessageType.REPLY, seqid);
+        var result_obj = new JobService_add_result({success: result});
+        output.writeMessageBegin("add", Thrift.MessageType.REPLY, seqid);
         result_obj.write(output);
         output.writeMessageEnd();
         output.flush();
       }, function (err) {
         var result;
         if (err instanceof PublicStruct_ttypes.InvalidOperation) {
-          result = new TaskProcessor_execute_result(err);
-          output.writeMessageBegin("execute", Thrift.MessageType.REPLY, seqid);
+          result = new JobService_add_result(err);
+          output.writeMessageBegin("add", Thrift.MessageType.REPLY, seqid);
         } else {
           result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-          output.writeMessageBegin("execute", Thrift.MessageType.EXCEPTION, seqid);
+          output.writeMessageBegin("add", Thrift.MessageType.EXCEPTION, seqid);
         }
         result.write(output);
         output.writeMessageEnd();
         output.flush();
       });
   } else {
-    this._handler.execute(args.job, function (err, result) {
+    this._handler.add(args.job, function (err, result) {
       var result_obj;
       if ((err === null || typeof err === 'undefined') || err instanceof PublicStruct_ttypes.InvalidOperation) {
-        result_obj = new TaskProcessor_execute_result((err !== null || typeof err === 'undefined') ? err : {success: result});
-        output.writeMessageBegin("execute", Thrift.MessageType.REPLY, seqid);
+        result_obj = new JobService_add_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("add", Thrift.MessageType.REPLY, seqid);
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
-        output.writeMessageBegin("execute", Thrift.MessageType.EXCEPTION, seqid);
+        output.writeMessageBegin("add", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();
