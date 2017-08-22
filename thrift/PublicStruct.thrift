@@ -2,7 +2,7 @@ namespace java com.alone.dts.thrift.struct
 struct JobStruct {
     1: required string taskId,
     2: required string type,
-    3: optional i32 maxRetryTimes = 10,
+        3: optional i32 maxRetryTimes = 10,
     5: optional i32 retryTimes = 0,
     6: required string nodeGroup,
     7: required string action,

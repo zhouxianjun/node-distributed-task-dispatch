@@ -14,18 +14,17 @@ var ttypes = module.exports = {};
 var JobStruct = module.exports.JobStruct = function(args) {
   this.taskId = null;
   this.type = null;
-  this.maxRetryTimes = null;
-  this.retryTimes = null;
+  this.maxRetryTimes = 10;
+  this.retryTimes = 0;
   this.nodeGroup = null;
   this.action = null;
   this.params = null;
-  this.protoName = null;
-  this.feedback = null;
+  this.feedback = false;
   this.cron = null;
   this.triggerTime = null;
-  this.repeatCount = null;
-  this.repeatInterval = null;
-  this.relyOnPrevCycle = null;
+  this.repeatCount = 0;
+  this.repeatInterval = 1000;
+  this.relyOnPrevCycle = false;
   this.submitHost = null;
   this.submitPid = null;
   if (args) {
@@ -57,9 +56,6 @@ var JobStruct = module.exports.JobStruct = function(args) {
     }
     if (args.params !== undefined && args.params !== null) {
       this.params = Thrift.copyMap(args.params, [null]);
-    }
-    if (args.protoName !== undefined && args.protoName !== null) {
-      this.protoName = args.protoName;
     }
     if (args.feedback !== undefined && args.feedback !== null) {
       this.feedback = args.feedback;
@@ -172,62 +168,55 @@ JobStruct.prototype.read = function(input) {
       }
       break;
       case 9:
-      if (ftype == Thrift.Type.STRING) {
-        this.protoName = input.readString();
-      } else {
-        input.skip(ftype);
-      }
-      break;
-      case 10:
       if (ftype == Thrift.Type.BOOL) {
         this.feedback = input.readBool();
       } else {
         input.skip(ftype);
       }
       break;
-      case 11:
+      case 10:
       if (ftype == Thrift.Type.STRING) {
         this.cron = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 12:
+      case 11:
       if (ftype == Thrift.Type.I64) {
         this.triggerTime = input.readI64();
       } else {
         input.skip(ftype);
       }
       break;
-      case 13:
+      case 12:
       if (ftype == Thrift.Type.I32) {
         this.repeatCount = input.readI32();
       } else {
         input.skip(ftype);
       }
       break;
-      case 14:
+      case 13:
       if (ftype == Thrift.Type.I32) {
         this.repeatInterval = input.readI32();
       } else {
         input.skip(ftype);
       }
       break;
-      case 15:
+      case 14:
       if (ftype == Thrift.Type.BOOL) {
         this.relyOnPrevCycle = input.readBool();
       } else {
         input.skip(ftype);
       }
       break;
-      case 16:
+      case 15:
       if (ftype == Thrift.Type.STRING) {
         this.submitHost = input.readString();
       } else {
         input.skip(ftype);
       }
       break;
-      case 17:
+      case 16:
       if (ftype == Thrift.Type.I32) {
         this.submitPid = input.readI32();
       } else {
@@ -290,48 +279,43 @@ JobStruct.prototype.write = function(output) {
     output.writeMapEnd();
     output.writeFieldEnd();
   }
-  if (this.protoName !== null && this.protoName !== undefined) {
-    output.writeFieldBegin('protoName', Thrift.Type.STRING, 9);
-    output.writeString(this.protoName);
-    output.writeFieldEnd();
-  }
   if (this.feedback !== null && this.feedback !== undefined) {
-    output.writeFieldBegin('feedback', Thrift.Type.BOOL, 10);
+    output.writeFieldBegin('feedback', Thrift.Type.BOOL, 9);
     output.writeBool(this.feedback);
     output.writeFieldEnd();
   }
   if (this.cron !== null && this.cron !== undefined) {
-    output.writeFieldBegin('cron', Thrift.Type.STRING, 11);
+    output.writeFieldBegin('cron', Thrift.Type.STRING, 10);
     output.writeString(this.cron);
     output.writeFieldEnd();
   }
   if (this.triggerTime !== null && this.triggerTime !== undefined) {
-    output.writeFieldBegin('triggerTime', Thrift.Type.I64, 12);
+    output.writeFieldBegin('triggerTime', Thrift.Type.I64, 11);
     output.writeI64(this.triggerTime);
     output.writeFieldEnd();
   }
   if (this.repeatCount !== null && this.repeatCount !== undefined) {
-    output.writeFieldBegin('repeatCount', Thrift.Type.I32, 13);
+    output.writeFieldBegin('repeatCount', Thrift.Type.I32, 12);
     output.writeI32(this.repeatCount);
     output.writeFieldEnd();
   }
   if (this.repeatInterval !== null && this.repeatInterval !== undefined) {
-    output.writeFieldBegin('repeatInterval', Thrift.Type.I32, 14);
+    output.writeFieldBegin('repeatInterval', Thrift.Type.I32, 13);
     output.writeI32(this.repeatInterval);
     output.writeFieldEnd();
   }
   if (this.relyOnPrevCycle !== null && this.relyOnPrevCycle !== undefined) {
-    output.writeFieldBegin('relyOnPrevCycle', Thrift.Type.BOOL, 15);
+    output.writeFieldBegin('relyOnPrevCycle', Thrift.Type.BOOL, 14);
     output.writeBool(this.relyOnPrevCycle);
     output.writeFieldEnd();
   }
   if (this.submitHost !== null && this.submitHost !== undefined) {
-    output.writeFieldBegin('submitHost', Thrift.Type.STRING, 16);
+    output.writeFieldBegin('submitHost', Thrift.Type.STRING, 15);
     output.writeString(this.submitHost);
     output.writeFieldEnd();
   }
   if (this.submitPid !== null && this.submitPid !== undefined) {
-    output.writeFieldBegin('submitPid', Thrift.Type.I32, 17);
+    output.writeFieldBegin('submitPid', Thrift.Type.I32, 16);
     output.writeI32(this.submitPid);
     output.writeFieldEnd();
   }

@@ -127,6 +127,429 @@ JobService_add_result.prototype.write = function(output) {
   return;
 };
 
+var JobService_pause_args = function(args) {
+  this.taskId = null;
+  this.msg = null;
+  this.hostInfo = null;
+  if (args) {
+    if (args.taskId !== undefined && args.taskId !== null) {
+      this.taskId = args.taskId;
+    }
+    if (args.msg !== undefined && args.msg !== null) {
+      this.msg = args.msg;
+    }
+    if (args.hostInfo !== undefined && args.hostInfo !== null) {
+      this.hostInfo = new PublicStruct_ttypes.HostInfo(args.hostInfo);
+    }
+  }
+};
+JobService_pause_args.prototype = {};
+JobService_pause_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.taskId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.msg = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.hostInfo = new PublicStruct_ttypes.HostInfo();
+        this.hostInfo.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_pause_args.prototype.write = function(output) {
+  output.writeStructBegin('JobService_pause_args');
+  if (this.taskId !== null && this.taskId !== undefined) {
+    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
+    output.writeString(this.taskId);
+    output.writeFieldEnd();
+  }
+  if (this.msg !== null && this.msg !== undefined) {
+    output.writeFieldBegin('msg', Thrift.Type.STRING, 2);
+    output.writeString(this.msg);
+    output.writeFieldEnd();
+  }
+  if (this.hostInfo !== null && this.hostInfo !== undefined) {
+    output.writeFieldBegin('hostInfo', Thrift.Type.STRUCT, 3);
+    this.hostInfo.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var JobService_pause_result = function(args) {
+  this.ex = null;
+  if (args instanceof PublicStruct_ttypes.InvalidOperation) {
+    this.ex = args;
+    return;
+  }
+  if (args) {
+    if (args.ex !== undefined && args.ex !== null) {
+      this.ex = args.ex;
+    }
+  }
+};
+JobService_pause_result.prototype = {};
+JobService_pause_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ex = new PublicStruct_ttypes.InvalidOperation();
+        this.ex.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_pause_result.prototype.write = function(output) {
+  output.writeStructBegin('JobService_pause_result');
+  if (this.ex !== null && this.ex !== undefined) {
+    output.writeFieldBegin('ex', Thrift.Type.STRUCT, 1);
+    this.ex.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var JobService_recovery_args = function(args) {
+  this.taskId = null;
+  this.msg = null;
+  this.hostInfo = null;
+  if (args) {
+    if (args.taskId !== undefined && args.taskId !== null) {
+      this.taskId = args.taskId;
+    }
+    if (args.msg !== undefined && args.msg !== null) {
+      this.msg = args.msg;
+    }
+    if (args.hostInfo !== undefined && args.hostInfo !== null) {
+      this.hostInfo = new PublicStruct_ttypes.HostInfo(args.hostInfo);
+    }
+  }
+};
+JobService_recovery_args.prototype = {};
+JobService_recovery_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.taskId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.msg = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.hostInfo = new PublicStruct_ttypes.HostInfo();
+        this.hostInfo.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_recovery_args.prototype.write = function(output) {
+  output.writeStructBegin('JobService_recovery_args');
+  if (this.taskId !== null && this.taskId !== undefined) {
+    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
+    output.writeString(this.taskId);
+    output.writeFieldEnd();
+  }
+  if (this.msg !== null && this.msg !== undefined) {
+    output.writeFieldBegin('msg', Thrift.Type.STRING, 2);
+    output.writeString(this.msg);
+    output.writeFieldEnd();
+  }
+  if (this.hostInfo !== null && this.hostInfo !== undefined) {
+    output.writeFieldBegin('hostInfo', Thrift.Type.STRUCT, 3);
+    this.hostInfo.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var JobService_recovery_result = function(args) {
+  this.ex = null;
+  if (args instanceof PublicStruct_ttypes.InvalidOperation) {
+    this.ex = args;
+    return;
+  }
+  if (args) {
+    if (args.ex !== undefined && args.ex !== null) {
+      this.ex = args.ex;
+    }
+  }
+};
+JobService_recovery_result.prototype = {};
+JobService_recovery_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ex = new PublicStruct_ttypes.InvalidOperation();
+        this.ex.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_recovery_result.prototype.write = function(output) {
+  output.writeStructBegin('JobService_recovery_result');
+  if (this.ex !== null && this.ex !== undefined) {
+    output.writeFieldBegin('ex', Thrift.Type.STRUCT, 1);
+    this.ex.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var JobService_cancel_args = function(args) {
+  this.taskId = null;
+  this.msg = null;
+  this.hostInfo = null;
+  if (args) {
+    if (args.taskId !== undefined && args.taskId !== null) {
+      this.taskId = args.taskId;
+    }
+    if (args.msg !== undefined && args.msg !== null) {
+      this.msg = args.msg;
+    }
+    if (args.hostInfo !== undefined && args.hostInfo !== null) {
+      this.hostInfo = new PublicStruct_ttypes.HostInfo(args.hostInfo);
+    }
+  }
+};
+JobService_cancel_args.prototype = {};
+JobService_cancel_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.taskId = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRING) {
+        this.msg = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 3:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.hostInfo = new PublicStruct_ttypes.HostInfo();
+        this.hostInfo.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_cancel_args.prototype.write = function(output) {
+  output.writeStructBegin('JobService_cancel_args');
+  if (this.taskId !== null && this.taskId !== undefined) {
+    output.writeFieldBegin('taskId', Thrift.Type.STRING, 1);
+    output.writeString(this.taskId);
+    output.writeFieldEnd();
+  }
+  if (this.msg !== null && this.msg !== undefined) {
+    output.writeFieldBegin('msg', Thrift.Type.STRING, 2);
+    output.writeString(this.msg);
+    output.writeFieldEnd();
+  }
+  if (this.hostInfo !== null && this.hostInfo !== undefined) {
+    output.writeFieldBegin('hostInfo', Thrift.Type.STRUCT, 3);
+    this.hostInfo.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var JobService_cancel_result = function(args) {
+  this.ex = null;
+  if (args instanceof PublicStruct_ttypes.InvalidOperation) {
+    this.ex = args;
+    return;
+  }
+  if (args) {
+    if (args.ex !== undefined && args.ex !== null) {
+      this.ex = args.ex;
+    }
+  }
+};
+JobService_cancel_result.prototype = {};
+JobService_cancel_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ex = new PublicStruct_ttypes.InvalidOperation();
+        this.ex.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_cancel_result.prototype.write = function(output) {
+  output.writeStructBegin('JobService_cancel_result');
+  if (this.ex !== null && this.ex !== undefined) {
+    output.writeFieldBegin('ex', Thrift.Type.STRUCT, 1);
+    this.ex.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var JobServiceClient = exports.Client = function(output, pClass) {
     this.output = output;
     this.pClass = pClass;
@@ -175,6 +598,153 @@ JobServiceClient.prototype.recv_add = function(input,mtype,rseqid) {
     return callback(x);
   }
   var result = new JobService_add_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.ex) {
+    return callback(result.ex);
+  }
+  callback(null);
+};
+JobServiceClient.prototype.pause = function(taskId, msg, hostInfo, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_pause(taskId, msg, hostInfo);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_pause(taskId, msg, hostInfo);
+  }
+};
+
+JobServiceClient.prototype.send_pause = function(taskId, msg, hostInfo) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('pause', Thrift.MessageType.CALL, this.seqid());
+  var args = new JobService_pause_args();
+  args.taskId = taskId;
+  args.msg = msg;
+  args.hostInfo = hostInfo;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+JobServiceClient.prototype.recv_pause = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new JobService_pause_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.ex) {
+    return callback(result.ex);
+  }
+  callback(null);
+};
+JobServiceClient.prototype.recovery = function(taskId, msg, hostInfo, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_recovery(taskId, msg, hostInfo);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_recovery(taskId, msg, hostInfo);
+  }
+};
+
+JobServiceClient.prototype.send_recovery = function(taskId, msg, hostInfo) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('recovery', Thrift.MessageType.CALL, this.seqid());
+  var args = new JobService_recovery_args();
+  args.taskId = taskId;
+  args.msg = msg;
+  args.hostInfo = hostInfo;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+JobServiceClient.prototype.recv_recovery = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new JobService_recovery_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.ex) {
+    return callback(result.ex);
+  }
+  callback(null);
+};
+JobServiceClient.prototype.cancel = function(taskId, msg, hostInfo, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_cancel(taskId, msg, hostInfo);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_cancel(taskId, msg, hostInfo);
+  }
+};
+
+JobServiceClient.prototype.send_cancel = function(taskId, msg, hostInfo) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('cancel', Thrift.MessageType.CALL, this.seqid());
+  var args = new JobService_cancel_args();
+  args.taskId = taskId;
+  args.msg = msg;
+  args.hostInfo = hostInfo;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+JobServiceClient.prototype.recv_cancel = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new JobService_cancel_result();
   result.read(input);
   input.readMessageEnd();
 
@@ -236,6 +806,129 @@ JobServiceProcessor.prototype.process_add = function(seqid, input, output) {
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("add", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+JobServiceProcessor.prototype.process_pause = function(seqid, input, output) {
+  var args = new JobService_pause_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.pause.length === 3) {
+    Q.fcall(this._handler.pause, args.taskId, args.msg, args.hostInfo)
+      .then(function(result) {
+        var result_obj = new JobService_pause_result({success: result});
+        output.writeMessageBegin("pause", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        if (err instanceof PublicStruct_ttypes.InvalidOperation) {
+          result = new JobService_pause_result(err);
+          output.writeMessageBegin("pause", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("pause", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.pause(args.taskId, args.msg, args.hostInfo, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof PublicStruct_ttypes.InvalidOperation) {
+        result_obj = new JobService_pause_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("pause", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("pause", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+JobServiceProcessor.prototype.process_recovery = function(seqid, input, output) {
+  var args = new JobService_recovery_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.recovery.length === 3) {
+    Q.fcall(this._handler.recovery, args.taskId, args.msg, args.hostInfo)
+      .then(function(result) {
+        var result_obj = new JobService_recovery_result({success: result});
+        output.writeMessageBegin("recovery", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        if (err instanceof PublicStruct_ttypes.InvalidOperation) {
+          result = new JobService_recovery_result(err);
+          output.writeMessageBegin("recovery", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("recovery", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.recovery(args.taskId, args.msg, args.hostInfo, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof PublicStruct_ttypes.InvalidOperation) {
+        result_obj = new JobService_recovery_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("recovery", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("recovery", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+JobServiceProcessor.prototype.process_cancel = function(seqid, input, output) {
+  var args = new JobService_cancel_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.cancel.length === 3) {
+    Q.fcall(this._handler.cancel, args.taskId, args.msg, args.hostInfo)
+      .then(function(result) {
+        var result_obj = new JobService_cancel_result({success: result});
+        output.writeMessageBegin("cancel", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        if (err instanceof PublicStruct_ttypes.InvalidOperation) {
+          result = new JobService_cancel_result(err);
+          output.writeMessageBegin("cancel", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("cancel", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.cancel(args.taskId, args.msg, args.hostInfo, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof PublicStruct_ttypes.InvalidOperation) {
+        result_obj = new JobService_cancel_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("cancel", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("cancel", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();

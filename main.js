@@ -26,35 +26,43 @@
  */
 'use strict';
 const path = require('path');
+const SequelizeDao = require('sequelize-dao');
 const config = require('./config.json');
-const Utils = require('./lib/Utils');
-const Constant = require('./lib/Constant');
 
 (async () => {
     // 初始化数据库
     const DB = require('./lib/DB');
-    await Utils.loadEntity(DB.sequelize, './lib/entity');
+    await SequelizeDao.loadEntity(DB.sequelize, './lib/entity');
     // 初始化RPC
     const RPC = require('./lib/RPC');
-    RPC.client.loadType(path.resolve(__dirname, './gen-nodejs'));
-    RPC.client.on('ready', async () => {
-        RPC.server.load('./lib/service');
-        const JobDao = require('./lib/dao/JobDao');
-        const JobService = require('./lib/service/JobService');
+    await RPC.client.loadType(path.resolve(__dirname, './gen-nodejs'));
+    await RPC.server.load('./lib/service');
 
-        // 定时扫描
-        /*setInterval(async () => {
-            try {
-                let jobs = await JobDao.findAll({
-                    status: Constant.JOB_STATUS.CREATE,
-                    dispatch: `${RPC.server.config.host}:${RPC.server.config.port}`
-                });
-                for(let job of jobs) {
-                    await JobService.addToSchedule(job.get({plain: true}));
-                }
-            } catch (err) {
-                console.error(err.stack);
+    const JobDao = require('./lib/dao/JobDao');
+    const JobService = require('./lib/service/JobService');
+
+    // 定时扫描 需要被分发的任务
+    setInterval(async () => {
+        try {
+            let jobs = await JobDao.template('selectByAddToSchedule', {dispatch: `${RPC.server.config.host}:${RPC.server.config.port}`});
+            for(let job of jobs) {
+                if (JobService.hasSchedule(job.taskId)) continue;
+                await JobService.addToSchedule(job);
             }
-        }, config.scan_interval || 1000);*/
-    });
+        } catch (err) {
+            console.error(err.stack);
+        }
+    }, config.scan_interval || 1000);
+
+    // 定时扫描 需要重试的任务
+    setInterval(async () => {
+        try {
+            let jobs = await JobDao.template('selectByRetry', {dispatch: `${RPC.server.config.host}:${RPC.server.config.port}`});
+            for(let job of jobs) {
+                await JobService.addToSchedule(job, job.nextTime);
+            }
+        } catch (err) {
+            console.error(err.stack);
+        }
+    }, config.scan_interval || 1000);
 })();

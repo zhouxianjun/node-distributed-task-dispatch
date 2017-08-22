@@ -9,11 +9,11 @@
       "dialect": "mysql",
       "host": "192.168.1.114",
       "port": 3306,
-      "timezone": "+08:00"
+      "timezone": "+08:00",
+      "logging": false
     }
   },
   "zookeeper": "127.0.0.1:2181",
   "scan_interval": 1200,
-  "distributeRetry": 3,
-  "distributeInterval": 10000
+  "retryInterval": 60
 }

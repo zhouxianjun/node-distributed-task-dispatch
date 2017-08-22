@@ -1,11 +1,11 @@
 /**
  * Created by Alone on 2017/3/1.
  */
-const Utils = require('../lib/Utils');
+const SequelizeDao = require('sequelize-dao');
 const DB = require('../lib/DB');
-const Paging = require('../lib/dto/Paging');
+const Paging = SequelizeDao.Paging;
 (async() => {
-    await Utils.loadEntity(DB.sequelize, '../lib/entity');
+    await SequelizeDao.loadEntity(DB.sequelize, '../lib/entity');
     const JobLogDao = require('../lib/dao/JobLogDao');
     let paging = new Paging();
     paging.num = 1;
