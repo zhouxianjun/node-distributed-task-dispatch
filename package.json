@@ -27,7 +27,7 @@
     "node-zookeeper-client": "^0.2.2",
     "pify": "^2.3.0",
     "sequelize": "^3.30.2",
-    "sequelize-dao": "^1.0.2",
+    "sequelize-dao": "^1.0.3",
     "thrift": "latest",
     "tracer": "^0.8.7",
     "tracer-logger": "^1.0.2",

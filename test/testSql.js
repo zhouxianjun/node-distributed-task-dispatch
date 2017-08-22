@@ -20,7 +20,7 @@ const Paging = SequelizeDao.Paging;
         result = await JobLogDao.template('updateById', {id: 1, create: new Date()});
         console.log(result);
         let array = [null, 'RECEIVE', 'aaa', null, null, true, null, null, null, null, new Date(), new Date()];
-        result = await JobLogDao.template('insertByObj', Object.assign({arr: array}, Utils.template.arrayToObj(array)));
+        result = await JobLogDao.template('insertByObj', Object.assign({arr: array}, SequelizeDao.TemplateUtils.arrayToObj(array)));
         console.log(result);
         result = await JobLogDao.templateByPage('selectByPage', paging);
         console.log(result);
