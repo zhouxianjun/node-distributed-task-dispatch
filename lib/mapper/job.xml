@@ -9,6 +9,6 @@
 
     <select id="selectCanPauseOrRecoveryByTaskId" single="true">
         select {{$imports.Utils.fieldAttributeMap($imports.Model.Job)}} from dts_job where task_id = :taskId
-        and (`status` = 'CREATE' or `type` = 'CRON' or (`type` in ('REAL_TIME','TIMER','REPEAT') and (retry_times &lt; max_retry_times or repeated_count &lt; repeat_count)))
+        and (`status` = 'CREATE' or `type` = 'CRON' or (`type` in ('REAL_TIME','TIMER','REPEAT') and (retry_times &lt; max_retry_times or repeated_count &lt; repeat_count))) and `status` not in('FAILED', 'CANCEL', 'SUCCESS')
     </select>
 </template>
