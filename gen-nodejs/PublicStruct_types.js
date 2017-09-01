@@ -55,7 +55,7 @@ var JobStruct = module.exports.JobStruct = function(args) {
       throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field action is unset!');
     }
     if (args.params !== undefined && args.params !== null) {
-      this.params = Thrift.copyMap(args.params, [null]);
+      this.params = args.params;
     }
     if (args.feedback !== undefined && args.feedback !== null) {
       this.feedback = args.feedback;
@@ -144,25 +144,8 @@ JobStruct.prototype.read = function(input) {
       }
       break;
       case 8:
-      if (ftype == Thrift.Type.MAP) {
-        var _size0 = 0;
-        var _rtmp34;
-        this.params = {};
-        var _ktype1 = 0;
-        var _vtype2 = 0;
-        _rtmp34 = input.readMapBegin();
-        _ktype1 = _rtmp34.ktype;
-        _vtype2 = _rtmp34.vtype;
-        _size0 = _rtmp34.size;
-        for (var _i5 = 0; _i5 < _size0; ++_i5)
-        {
-          var key6 = null;
-          var val7 = null;
-          key6 = input.readString();
-          val7 = input.readString();
-          this.params[key6] = val7;
-        }
-        input.readMapEnd();
+      if (ftype == Thrift.Type.STRING) {
+        this.params = input.readString();
       } else {
         input.skip(ftype);
       }
@@ -265,18 +248,8 @@ JobStruct.prototype.write = function(output) {
     output.writeFieldEnd();
   }
   if (this.params !== null && this.params !== undefined) {
-    output.writeFieldBegin('params', Thrift.Type.MAP, 8);
-    output.writeMapBegin(Thrift.Type.STRING, Thrift.Type.STRING, Thrift.objectLength(this.params));
-    for (var kiter8 in this.params)
-    {
-      if (this.params.hasOwnProperty(kiter8))
-      {
-        var viter9 = this.params[kiter8];
-        output.writeString(kiter8);
-        output.writeString(viter9);
-      }
-    }
-    output.writeMapEnd();
+    output.writeFieldBegin('params', Thrift.Type.STRING, 8);
+    output.writeString(this.params);
     output.writeFieldEnd();
   }
   if (this.feedback !== null && this.feedback !== undefined) {

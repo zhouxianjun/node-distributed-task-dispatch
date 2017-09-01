@@ -6,7 +6,7 @@ struct JobStruct {
     5: optional i32 retryTimes = 0,
     6: required string nodeGroup,
     7: required string action,
-    8: optional map<string, string> params,
+    8: optional string params,
     9: optional bool feedback = false,
     10: optional string cron,
     11: optional i64 triggerTime,
