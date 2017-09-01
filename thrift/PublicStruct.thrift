@@ -27,6 +27,11 @@ struct HostInfo {
     3: required i32 pid
 }
 
+struct ExecuteResult {
+    1: optional string msg,
+    2: required HostInfo info
+}
+
 const string CRON = 'CRON';
 const string REAL_TIME = 'REAL_TIME';
 const string TIMER = 'TIMER';

@@ -78,7 +78,7 @@ var TaskProcessor_execute_result = function(args) {
   }
   if (args) {
     if (args.success !== undefined && args.success !== null) {
-      this.success = new PublicStruct_ttypes.HostInfo(args.success);
+      this.success = new PublicStruct_ttypes.ExecuteResult(args.success);
     }
     if (args.ex !== undefined && args.ex !== null) {
       this.ex = args.ex;
@@ -101,7 +101,7 @@ TaskProcessor_execute_result.prototype.read = function(input) {
     {
       case 0:
       if (ftype == Thrift.Type.STRUCT) {
-        this.success = new PublicStruct_ttypes.HostInfo();
+        this.success = new PublicStruct_ttypes.ExecuteResult();
         this.success.read(input);
       } else {
         input.skip(ftype);

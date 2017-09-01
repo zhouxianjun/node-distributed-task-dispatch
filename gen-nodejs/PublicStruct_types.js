@@ -454,6 +454,75 @@ HostInfo.prototype.write = function(output) {
   return;
 };
 
+var ExecuteResult = module.exports.ExecuteResult = function(args) {
+  this.msg = null;
+  this.info = null;
+  if (args) {
+    if (args.msg !== undefined && args.msg !== null) {
+      this.msg = args.msg;
+    }
+    if (args.info !== undefined && args.info !== null) {
+      this.info = new ttypes.HostInfo(args.info);
+    } else {
+      throw new Thrift.TProtocolException(Thrift.TProtocolExceptionType.UNKNOWN, 'Required field info is unset!');
+    }
+  }
+};
+ExecuteResult.prototype = {};
+ExecuteResult.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRING) {
+        this.msg = input.readString();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 2:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.info = new ttypes.HostInfo();
+        this.info.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+ExecuteResult.prototype.write = function(output) {
+  output.writeStructBegin('ExecuteResult');
+  if (this.msg !== null && this.msg !== undefined) {
+    output.writeFieldBegin('msg', Thrift.Type.STRING, 1);
+    output.writeString(this.msg);
+    output.writeFieldEnd();
+  }
+  if (this.info !== null && this.info !== undefined) {
+    output.writeFieldBegin('info', Thrift.Type.STRUCT, 2);
+    this.info.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 ttypes.CRON = 'CRON';
 ttypes.REAL_TIME = 'REAL_TIME';
 ttypes.TIMER = 'TIMER';
