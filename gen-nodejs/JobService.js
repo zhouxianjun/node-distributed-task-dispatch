@@ -127,6 +127,140 @@ JobService_add_result.prototype.write = function(output) {
   return;
 };
 
+var JobService_addList_args = function(args) {
+  this.jobs = null;
+  if (args) {
+    if (args.jobs !== undefined && args.jobs !== null) {
+      this.jobs = Thrift.copyList(args.jobs, [PublicStruct_ttypes.JobStruct]);
+    }
+  }
+};
+JobService_addList_args.prototype = {};
+JobService_addList_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.LIST) {
+        var _size0 = 0;
+        var _rtmp34;
+        this.jobs = [];
+        var _etype3 = 0;
+        _rtmp34 = input.readListBegin();
+        _etype3 = _rtmp34.etype;
+        _size0 = _rtmp34.size;
+        for (var _i5 = 0; _i5 < _size0; ++_i5)
+        {
+          var elem6 = null;
+          elem6 = new PublicStruct_ttypes.JobStruct();
+          elem6.read(input);
+          this.jobs.push(elem6);
+        }
+        input.readListEnd();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_addList_args.prototype.write = function(output) {
+  output.writeStructBegin('JobService_addList_args');
+  if (this.jobs !== null && this.jobs !== undefined) {
+    output.writeFieldBegin('jobs', Thrift.Type.LIST, 1);
+    output.writeListBegin(Thrift.Type.STRUCT, this.jobs.length);
+    for (var iter7 in this.jobs)
+    {
+      if (this.jobs.hasOwnProperty(iter7))
+      {
+        iter7 = this.jobs[iter7];
+        iter7.write(output);
+      }
+    }
+    output.writeListEnd();
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+var JobService_addList_result = function(args) {
+  this.ex = null;
+  if (args instanceof PublicStruct_ttypes.InvalidOperation) {
+    this.ex = args;
+    return;
+  }
+  if (args) {
+    if (args.ex !== undefined && args.ex !== null) {
+      this.ex = args.ex;
+    }
+  }
+};
+JobService_addList_result.prototype = {};
+JobService_addList_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.ex = new PublicStruct_ttypes.InvalidOperation();
+        this.ex.read(input);
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+JobService_addList_result.prototype.write = function(output) {
+  output.writeStructBegin('JobService_addList_result');
+  if (this.ex !== null && this.ex !== undefined) {
+    output.writeFieldBegin('ex', Thrift.Type.STRUCT, 1);
+    this.ex.write(output);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 var JobService_pause_args = function(args) {
   this.taskId = null;
   this.msg = null;
@@ -606,6 +740,53 @@ JobServiceClient.prototype.recv_add = function(input,mtype,rseqid) {
   }
   callback(null);
 };
+JobServiceClient.prototype.addList = function(jobs, callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_addList(jobs);
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_addList(jobs);
+  }
+};
+
+JobServiceClient.prototype.send_addList = function(jobs) {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('addList', Thrift.MessageType.CALL, this.seqid());
+  var args = new JobService_addList_args();
+  args.jobs = jobs;
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+JobServiceClient.prototype.recv_addList = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new JobService_addList_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.ex) {
+    return callback(result.ex);
+  }
+  callback(null);
+};
 JobServiceClient.prototype.pause = function(taskId, msg, hostInfo, callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -806,6 +987,47 @@ JobServiceProcessor.prototype.process_add = function(seqid, input, output) {
       } else {
         result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("add", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result_obj.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+};
+JobServiceProcessor.prototype.process_addList = function(seqid, input, output) {
+  var args = new JobService_addList_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.addList.length === 1) {
+    Q.fcall(this._handler.addList, args.jobs)
+      .then(function(result) {
+        var result_obj = new JobService_addList_result({success: result});
+        output.writeMessageBegin("addList", Thrift.MessageType.REPLY, seqid);
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result;
+        if (err instanceof PublicStruct_ttypes.InvalidOperation) {
+          result = new JobService_addList_result(err);
+          output.writeMessageBegin("addList", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("addList", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.addList(args.jobs, function (err, result) {
+      var result_obj;
+      if ((err === null || typeof err === 'undefined') || err instanceof PublicStruct_ttypes.InvalidOperation) {
+        result_obj = new JobService_addList_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+        output.writeMessageBegin("addList", Thrift.MessageType.REPLY, seqid);
+      } else {
+        result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("addList", Thrift.MessageType.EXCEPTION, seqid);
       }
       result_obj.write(output);
       output.writeMessageEnd();
