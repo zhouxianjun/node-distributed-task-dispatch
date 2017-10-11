@@ -31,6 +31,6 @@
     "thrift": "latest",
     "tracer": "^0.8.7",
     "tracer-logger": "^1.0.2",
-    "trc": "^1.0.4"
+    "trc": "^1.0.7"
   }
 }
