@@ -1,6 +1,6 @@
 <template>
     <select id="selectByAddToSchedule">
-        select {{$imports.Utils.fieldAttributeMap($imports.Model.Job)}} from dts_job where `status` = 'CREATE' or (`status` = 'RUNNING' and `type` = 'CRON') and dispatch = :dispatch
+        select {{$imports.Utils.fieldAttributeMap($imports.Model.Job)}} from dts_job where `status` = 'CREATE' or (`status` = 'RUNNING' and `type` = 'CRON') or (`status` = 'EXECUTE' and `type` = 'CRON' and rely_on_prev_cycle = 0) and dispatch = :dispatch
     </select>
 
     <select id="selectByRetry">

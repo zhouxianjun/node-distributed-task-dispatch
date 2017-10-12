@@ -6,4 +6,6 @@ service JobService {
     void pause(1: string taskId, 2: string msg, 3: PublicStruct.HostInfo hostInfo) throws (1: PublicStruct.InvalidOperation ex);
     void recovery(1: string taskId, 2: string msg, 3: PublicStruct.HostInfo hostInfo) throws (1: PublicStruct.InvalidOperation ex);
     void cancel(1: string taskId, 2: string msg, 3: PublicStruct.HostInfo hostInfo) throws (1: PublicStruct.InvalidOperation ex);
+    void complete(1: string taskId, 2: string msg, 3: PublicStruct.HostInfo hostInfo, 4: bool success) throws (1: PublicStruct.InvalidOperation ex);
+    void reset(1: string taskId, 2: string msg, 3: PublicStruct.HostInfo hostInfo) throws (1: PublicStruct.InvalidOperation ex);
 }
